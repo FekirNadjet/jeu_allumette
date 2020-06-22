@@ -20,11 +20,15 @@ def jeu_ordi(nb_allum, prise_max):
 
 
 #le nombre d'allumettes que je prend
-def jeu_moi(nb_allu_max):
+def jeu_moi(nb_allu_max,nb_allu_rest):
     prise = 0
-    while (prise <= 0 or prise > nb_allu_max):
+    if(nb_allu_max>nb_allu_rest):#si le nombre d'allumete restante est inférieure au nombre max on pourra pas tirer le nombre max
+        nbr=nb_allu_rest
+    else:
+        nbr=nb_allu_max
+    while (prise <= 0 or prise > nb_allu_max or prise>nb_allu_rest):
         try:
-            print("Vous pouvez tirer entre 1 et ",nb_allu_max," allumettes")
+            print("Vous pouvez tirer entre 1 et ",nbr," allumettes")
             prise = int(input("combien d'allumette voulez-vous tirer ?"))
         except:
             print("saisie incorrecte")
@@ -57,31 +61,22 @@ def afficher_allumettes(n):
 #nb_allu_max le maximum d'allumette qu'on peut tirer
 #qui celui qui commence le jeu
 def jeu(nb_allu_rest,nb_allu_max,qui):
-    if(qui==0):
-        while (nb_allu_rest != 0):
-            nb_allu_rest-=jeu_moi(nb_allu_max)
+    while (nb_allu_rest != 0):
+        if(qui==0):
+            qui = 1
+            nb_allu_rest-=jeu_moi(nb_allu_max,nb_allu_rest)
             if(nb_allu_rest==0):
                 print("le pc a gangé")
             else:
                 afficher_allumettes(nb_allu_rest)
-                nb_allu_rest-=jeu_ordi(nb_allu_rest,nb_allu_max)
-                afficher_allumettes(nb_allu_rest)
-                if (nb_allu_rest == 0):
-                    print("j'ai gangé")
-    else:
-        while (nb_allu_rest != 0):
+
+        else:
+            qui = 0
             nb_allu_rest -= jeu_ordi(nb_allu_rest, nb_allu_max)
             if (nb_allu_rest == 0):
                 print("j'ai gangé")
-            afficher_allumettes(nb_allu_rest)
-            nb_allu_rest-=jeu_moi(nb_allu_max)
-            afficher_allumettes(nb_allu_rest)
-            if (nb_allu_rest == 0):
-                print("le pc a gangé")
-
-
-
-
+            else:
+                afficher_allumettes(nb_allu_rest)
 
 
 def main():
@@ -92,7 +87,7 @@ def main():
     qui = -1
     while (nb_max_d < 10 or nb_max_d > 60):
         try:
-            nb_max_d = int(input("Entrez un nombre max d'allumette au depart entre 10 et 60."))
+            nb_max_d = int(input("Entrez un nombre max d'allumette au depart entre 10 et 50."))
         except:
             print("saisie incorrecte")
     nb_allu_rest = nb_max_d
